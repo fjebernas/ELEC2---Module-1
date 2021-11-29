@@ -19,6 +19,17 @@ def get_entries():
     cursor = connection.cursor()
     return cursor.execute("SELECT * FROM homework_entries")
 
+def get_single_entry(entry_entryID):
+    cursor = connection.cursor()
+    return cursor.execute(
+        f"SELECT * FROM homework_entries WHERE entryID = '{entry_entryID}'")
+
+def update_entry(entry_chosen, new_entryName, entry_entryID):
+    cursor = connection.cursor()
+    cursor.execute(
+        f"UPDATE homework_entries SET '{entry_chosen}' = '{new_entryName}' WHERE entryID = '{entry_entryID}'")
+    connection.commit()
+
 def delete_entry(entry_entryID):
     cursor = connection.cursor()
     cursor.execute(
