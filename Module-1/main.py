@@ -18,17 +18,18 @@ class txt_style:
 #FUNCTIONS
 def prompt_user_add_entry():
     header("\n----------Add an entry----------\n")
-    entry_content = input(prompt("What have you learned today? "))
-    entry_date = input(prompt("Enter date: "))
-    database.add_entry(entry_content, entry_date)
+    entry_homework = input(prompt("What is the homework? "))
+    entry_subject = input(prompt("What subject is this homework from? "))
+    entry_deadline = input(prompt("When is the deadline? "))
+    database.add_entry(entry_homework, entry_subject, entry_deadline)
     confirmation("\nAdd entry successful!")
     message_return_home()
     home_menu()
 
-def display_entries(entries):
+def display_entries(homework_entries):
     header("\n----------Here are your entries----------")
-    for entry in entries:
-        print(f"\n{entry[0]}\n{entry[1]}\n{entry[2]}\n")
+    for entry in homework_entries:
+        print(f"\n{entry[0]}\n{entry[1]}\n{entry[2]}\n{entry[3]}\n")
     message_return_home()
     home_menu()
 
@@ -41,7 +42,16 @@ def prompt_user_delete_entry():
         confirmation("\nDelete successful!")
     message_return_home()
     home_menu()
-    
+
+def prompt_user_delete_all():
+    header("\n----------Delete all entries----------")
+    answer = input(txt_style.BOLD + txt_style.RED + "\nAre you sure you want to delete all entries? Type in \"Yes\" to continue. . . " + txt_style.ENDC)
+    if answer.lower() == "yes":
+        database.delete_all_entries()
+        confirmation("\nDeleted all entries!")
+    message_return_home()
+    home_menu()
+
 def title(message):
     return print(txt_style.BOLD + txt_style.PURPLE + message + txt_style.ENDC)
 
@@ -77,6 +87,8 @@ def home_menu():
     elif user_input == "3":
         prompt_user_delete_entry()
     elif user_input == "4":
+        prompt_user_delete_all()
+    elif user_input == "5":
         sys.exit()
     else:
         warning("Invalid input")
@@ -88,7 +100,8 @@ menu = """
 1. Add new homework entry.
 2. View homework entries.
 3. Delete a homework entry.
-4. Exit.
+4. Delete all homework entries.
+5. Exit.
 """
 
 
