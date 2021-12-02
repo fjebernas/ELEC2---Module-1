@@ -15,7 +15,7 @@ class txt_style:
     ITALICS = '\x1B[3m'
 
 #FUNCTIONS
-def prompt_user_add_entry():
+def menu_addEntry():
     header("\n----------Add new homework entry----------\n")
     homework = input(prompt("What is the homework? "))
     subject = input(prompt("What subject is this homework from? "))
@@ -25,50 +25,38 @@ def prompt_user_add_entry():
     message_return_home()
     home_menu()
 
-def display_entries(entries):
-    header("\n----------Here are your homework/s----------")
+def menu_displayEntries(entries):
     for entry in entries:
-        print(f"\n{entry[0]}\n{entry[1]}\n{entry[2]}\n{entry[3]}\n")
-    message_return_home()
-    home_menu()
+        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\n")
 
-#################################################################
-def view_single_entry(num):
-    single_row = database.get_single_entry(num)
-    for entry in single_row:
-        print(f"\n{entry[0]}\n{entry[1]}\n{entry[2]}\n{entry[3]}\n")
-#################################################################
-
-#################################################################
-def edit_entry():
-    header("\n----------Edit a homework entry----------")
+def menu_editEntry():
     tester_list = ["homework", "subject", "deadline"]
-    num_entry = input(prompt("\nEnter entry ID: "))
-    view_single_entry(num_entry)
+    num = input(prompt("\nEnter entry ID: "))
+    view_single_entry(num)
     choose_entry = input(prompt("Edit name/date for homework, subject or deadline? "))
     choose_entry = choose_entry.lower()
 
     if choose_entry in tester_list:
-        new_name = input(prompt("Enter new name/date of " + choose_entry + ": "))
-        database.update_entry(choose_entry, new_name, num_entry)
+        new_name = input(prompt(f"\nEnter new name/date of {choose_entry}: "))
+        database.update_entry(choose_entry, new_name, num)
         confirmation("\nEdit success!")
     else:
         print(warning("\nInvalid input"))
+        
     message_return_home()
     home_menu()
-#################################################################
 
-def prompt_user_delete_entry():
-    header("\n----------Delete a homework entry----------\n")
-    num = input("Enter ID of entry: ")
-    answer = input(warning("\nDelete entry with the ID of " + num + "? Type in \"Yes\" to continue. . . "))
+def menu_deleteEntry():
+    num = input(prompt("Enter ID of entry: "))
+    view_single_entry(num)
+    answer = input(warning(f"\nDelete entry with the ID of {num}? Type in \"Yes\" to continue. . . "))
     if answer.lower() == "yes":
         database.delete_entry(num)
         confirmation("\nDelete successful!")
     message_return_home()
     home_menu()
 
-def prompt_user_delete_all():
+def menu_deleteAllEntries():
     header("\n----------Delete all homework entries----------")
     answer = input(warning("\nAre you sure you want to delete all homework entries? Type in \"Yes\" to continue. . . "))
     if answer.lower() == "yes":
@@ -77,6 +65,12 @@ def prompt_user_delete_all():
     message_return_home()
     home_menu()
 
+def view_single_entry(num):
+    single_row = database.get_single_entry(num)
+    for entry in single_row:
+        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\n")
+
+#Templates
 def title(message):
     return print(txt_style.BOLD + txt_style.PURPLE + message + txt_style.ENDC)
 
@@ -98,39 +92,47 @@ def warning(message):
 def message_return_home():
     a = input("Press ENTER to return go back to menu. . .")
 
+#also the main function
 def home_menu():
     title("\n\n                                Welcome to the HOMEWORK ORGANIZER!")
     sub_title("                                  never miss an assignment again\n\n")
     header("Please select one of the following options:")
 
+    prompt_message = "\nYour Selection: "
+    menu = """
+    1. Add new homework entry.                                 Homework entry example:
+    2. View homework entries.                                  1                        <--  Entry ID
+    3. Edit homework entry.                                    Make a simple program    <--  Homework
+    4. Delete a homework entry.                                Programming              <--  Subject
+    5. Delete all homework entries.                            Jan 1, 2021              <--  Deadline
+    6. Exit.
+    """
+
     user_input = input(menu + prompt(prompt_message))
 
     if user_input == "1":
-        prompt_user_add_entry()
+        menu_addEntry()
     elif user_input == "2":
-        display_entries(database.get_entries())
+        header("\n----------Here are your homework/s----------")
+        menu_displayEntries(database.get_entries())
+        message_return_home()
+        home_menu()
     elif user_input == "3":
-        edit_entry()
+        header("\n----------Edit a homework entry----------")
+        menu_displayEntries(database.get_entries())
+        menu_editEntry()
     elif user_input == "4":
-        prompt_user_delete_entry()
+        header("\n----------Delete a homework entry----------\n")
+        menu_displayEntries(database.get_entries())
+        menu_deleteEntry()
     elif user_input == "5":
-        prompt_user_delete_all()
+        menu_deleteAllEntries()
     elif user_input == "6":
         sys.exit()
     else:
-        print(warning("Invalid input"))
+        print(warning("\nInvalid input"))
+        message_return_home()
         home_menu()
-
-#VARIABLES
-prompt_message = "\nYour Selection: "
-menu = """
-1. Add new homework entry.                                 Homework entry example:
-2. View homework entries.                                  1                        <--  Entry ID
-3. Edit homework entry.                                    Make a simple program    <--  Homework
-4. Delete a homework entry.                                Programming              <--  Subject
-5. Delete all homework entries.                            Jan 1, 2021              <--  Deadline
-6. Exit.
-"""
 
 
 #START OF PROGRAM
