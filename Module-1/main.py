@@ -34,7 +34,8 @@ def menu_addEntry():
 def menu_displayEntries(entries):
     "Home menu selection #2"
     for entry in entries:
-        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\nNotes:          {entry[4]}\nStatus:         {replace(entry[5])}\n")
+        x = txt_style.BOLD + f"Entry ID:       {(str(entry[0]))}" + txt_style.ENDC
+        print(f"\n{x}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\nNotes:          {entry[4]}\nStatus:         {replace(entry[5])}\n")
 
 def menu_editEntry():
     "Home menu selection #3"
@@ -60,6 +61,8 @@ def menu_editEntry():
 def menu_finish():
     "Home menu selection #4"
     num_F = input(prompt("\nEnter entry ID: "))
+    escaper(num_F)
+    check_ifNum(num_F)
     view_single_entry(num_F)
     answer_F = input(txt_style.YELLOW + f"\nSet status of this homework entry as finished? Type in \"Yes\" to continue (Warning: this action can't be undone). . ." + txt_style.ENDC)
     if answer_F.lower() == "yes":
@@ -100,7 +103,8 @@ def view_single_entry(num):
     "menu_editEntry(), menu_finish() and menu_deleteEntry() calls this function"
     single_row = database.get_single_entry(num)
     for entry in single_row:
-        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\nNotes:          {entry[4]}\nStatus:         {replace(entry[5])}\n")
+        x = txt_style.BOLD + f"Entry ID:       {(str(entry[0]))}" + txt_style.ENDC
+        print(f"\n{x}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\nNotes:          {entry[4]}\nStatus:         {replace(entry[5])}\n")
 
 def escaper(x):
     "Input tester: if the input is 'esc', cancel the operation"
@@ -112,7 +116,7 @@ def escaper(x):
 def replace(status):
     "Replaces the value of a string"
     if status != "FINISHED":
-        status = "Pending"
+        status = warning("Pending")
     elif status == "FINISHED":
         status = highlight(status)
     return status
@@ -173,31 +177,31 @@ def home_menu():
     user_input = input(menu + prompt(prompt_message))
 
     if user_input == "1":
-        header("\n-------------Add new homework entry-------------")
+        header("\n-----------------------------------------Add new homework entry-----------------------------------------")
         escape_info()
         menu_addEntry()
     elif user_input == "2":
-        header("\n-------------Here are your homework/s-------------\n")
+        header("\n-----------------------------------------View homework entries-----------------------------------------\n")
         menu_displayEntries(database.get_entries())
         message_return_home()
         home_menu()
     elif user_input == "3":
-        header("\n-------------Edit a homework entry-------------")
+        header("\n-----------------------------------------Edit a homework entry-----------------------------------------")
         escape_info()
         menu_displayEntries(database.get_entries())
         menu_editEntry()
     elif user_input == "4":
-        header("\n-------------Set homework's status as finished-------------")
+        header("\n-----------------------------------------Set homework's status to \"Finished\"-----------------------------------------")
         escape_info()
         menu_displayEntries(database.get_entries())
         menu_finish()
     elif user_input == "5":
-        header("\n-------------Delete a homework entry-------------")
+        header("\n-----------------------------------------Delete a homework entry-----------------------------------------")
         escape_info()
         menu_displayEntries(database.get_entries())
         menu_deleteEntry()
     elif user_input == "6":
-        header("\n-------------Delete all homework entries-------------")
+        header("\n-----------------------------------------Delete all homework entries-----------------------------------------")
         menu_deleteAllEntries()
     elif user_input == "7":
         sys.exit()
