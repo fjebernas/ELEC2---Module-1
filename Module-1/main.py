@@ -147,7 +147,7 @@ def escape_info():
     return print(txt_style.PURPLE + "Tip: Type in 'esc' to cancel" + txt_style.ENDC)
 
 def message_return_home():
-    a = input(txt_style.CYAN + "Press ENTER to return go back to menu. . ." + txt_style.ENDC)
+    a = input(txt_style.CYAN + "Press ENTER to go back to menu. . ." + txt_style.ENDC)
 
 #also the main function
 def home_menu():
