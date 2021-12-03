@@ -7,7 +7,7 @@ connection = sqlite3.connect("data.db")
 
 def create_table():
     connection.execute(
-        "CREATE TABLE IF NOT EXISTS homework_entries (entryID INTEGER PRIMARY KEY, homework TEXT, subject TEXT, deadline TEXT, notes TEXT)")
+        "CREATE TABLE IF NOT EXISTS homework_entries (entryID INTEGER PRIMARY KEY, homework TEXT, subject TEXT, deadline TEXT, notes TEXT, status TEXT)")
     connection.commit()
 
 def add_entry(entry_homework, entry_subject, entry_deadline, entry_notes):
@@ -28,6 +28,12 @@ def update_entry(entry_chosen, new_entryName, entry_entryID):
     cursor = connection.cursor()
     cursor.execute(
         f"UPDATE homework_entries SET '{entry_chosen}' = '{new_entryName}' WHERE entryID = '{entry_entryID}'")
+    connection.commit()
+
+def finish_entry(entry_entryID):
+    cursor = connection.cursor()
+    cursor.execute(
+        f"UPDATE homework_entries SET 'status' = 'FINISHED' WHERE entryID = '{entry_entryID}'")
     connection.commit()
 
 def delete_entry(entry_entryID):
