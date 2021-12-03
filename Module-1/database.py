@@ -7,12 +7,12 @@ connection = sqlite3.connect("data.db")
 
 def create_table():
     connection.execute(
-        "CREATE TABLE IF NOT EXISTS homework_entries (entryID INTEGER PRIMARY KEY, homework TEXT, subject TEXT, deadline TEXT)")
+        "CREATE TABLE IF NOT EXISTS homework_entries (entryID INTEGER PRIMARY KEY, homework TEXT, subject TEXT, deadline TEXT, notes TEXT)")
     connection.commit()
 
-def add_entry(entry_homework, entry_subject, entry_deadline):
+def add_entry(entry_homework, entry_subject, entry_deadline, entry_notes):
     connection.execute(
-        f"INSERT INTO homework_entries(homework, subject, deadline) VALUES('{entry_homework}', '{entry_subject}', '{entry_deadline}')")
+        f"INSERT INTO homework_entries(homework, subject, deadline, notes) VALUES('{entry_homework}', '{entry_subject}', '{entry_deadline}', '{entry_notes}')")
     connection.commit()
 
 def get_entries():

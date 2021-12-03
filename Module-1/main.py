@@ -16,24 +16,30 @@ class txt_style:
 
 #FUNCTIONS
 def menu_addEntry():
-    header("\n----------Add new homework entry----------\n")
-    homework = input(prompt("What is the homework? "))
+    homework = input(prompt("\nWhat is the homework? "))
+    escaper(homework)
     subject = input(prompt("What subject is this homework from? "))
+    escaper(subject)
     deadline = input(prompt("When is the deadline? "))
-    database.add_entry(homework, subject, deadline)
+    escaper(deadline)
+    notes = input(prompt("Notes(optional): "))
+    escaper(notes)
+    database.add_entry(homework, subject, deadline, notes)
     confirmation("\nAdd entry successful!")
     message_return_home()
     home_menu()
 
 def menu_displayEntries(entries):
     for entry in entries:
-        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\n")
+        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\nNotes:          {highlight(entry[4])}\n")
 
 def menu_editEntry():
-    tester_list = ["homework", "subject", "deadline"]
+    tester_list = ["homework", "subject", "deadline", "notes"]
     num = input(prompt("\nEnter entry ID: "))
+    escaper(num)
     view_single_entry(num)
-    choose_entry = input(prompt("Edit name/date for homework, subject or deadline? "))
+    choose_entry = input(prompt("Edit name/date for homework, subject, deadline or notes? "))
+    escaper(choose_entry)
     choose_entry = choose_entry.lower()
 
     if choose_entry in tester_list:
@@ -47,38 +53,49 @@ def menu_editEntry():
     home_menu()
 
 def menu_deleteEntry():
-    num = input(prompt("Enter ID of entry: "))
-    view_single_entry(num)
-    answer = input(warning(f"\nDelete entry with the ID of {num}? Type in \"Yes\" to continue. . . "))
-    if answer.lower() == "yes":
-        database.delete_entry(num)
+    num_DE = input(prompt("\nEnter ID of entry: "))
+    escaper(num_DE)
+    view_single_entry(num_DE)
+    answer_DE = input(warning(f"\nDelete entry with the ID of {num_DE}? Type in \"Yes\" to continue. . . "))
+    if answer_DE.lower() == "yes":
+        database.delete_entry(num_DE)
         confirmation("\nDelete successful!")
+    else:
+        print(txt_style.ITALICS + txt_style.RED +"\n  Cancelled" + txt_style.ENDC)
     message_return_home()
     home_menu()
 
 def menu_deleteAllEntries():
-    header("\n----------Delete all homework entries----------")
-    answer = input(warning("\nAre you sure you want to delete all homework entries? Type in \"Yes\" to continue. . . "))
-    if answer.lower() == "yes":
+    answer_DAE = input(warning("\nAre you sure you want to delete all homework entries? Type in \"Yes\" to continue. . . "))
+    if answer_DAE.lower() == "yes":
         database.delete_all_entries()
         confirmation("\nDeleted all entries!")
+    else:
+        print(txt_style.ITALICS + txt_style.RED +"\n  Cancelled" + txt_style.ENDC)
     message_return_home()
     home_menu()
 
 def view_single_entry(num):
     single_row = database.get_single_entry(num)
     for entry in single_row:
-        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\n")
+        print(f"\nEntryID:        {entry[0]}\nHomework title: {entry[1]}\nSubject:        {entry[2]}\nDeadline:       {entry[3]}\nNotes:          {entry[3]}\n")
+
+def escaper(x):
+    if x.lower() == "esc":
+        print(txt_style.ITALICS + txt_style.RED +"\n  Cancelled" + txt_style.ENDC)
+        message_return_home()
+        home_menu()
+
 
 #Templates
 def title(message):
     return print(txt_style.BOLD + txt_style.PURPLE + message + txt_style.ENDC)
 
-def sub_title(message):
-    return print(txt_style.ITALICS + txt_style.BLUE + message + txt_style.ENDC)
+def highlight(message):
+    return txt_style.YELLOW + message + txt_style.ENDC
 
 def header(message):
-    return print(txt_style.BOLD + txt_style.CYAN + message + txt_style.ENDC)
+    return print(txt_style.BOLD + txt_style.BLUE + message + txt_style.ENDC)
 
 def prompt(message):
     return txt_style.GREEN + message + txt_style.ENDC
@@ -89,43 +106,55 @@ def confirmation(message):
 def warning(message):
     return txt_style.BOLD + txt_style.RED + message + txt_style.ENDC
 
+def escape_info():
+    return print(txt_style.PURPLE + "Tip: Type in 'esc' to cancel" + txt_style.ENDC)
+
 def message_return_home():
-    a = input("Press ENTER to return go back to menu. . .")
+    a = input(txt_style.CYAN + "Press ENTER to return go back to menu. . ." + txt_style.ENDC)
 
 #also the main function
 def home_menu():
-    title("\n\n                                Welcome to the HOMEWORK ORGANIZER!")
-    sub_title("                                  never miss an assignment again\n\n")
-    header("Please select one of the following options:")
+    title("""
+
+                    █░█ █▀█ █▀▄▀█ █▀▀ █░█░█ █▀█ █▀█ █▄▀   █▀█ █▀█ █▀▀ ▄▀█ █▄░█ █ ▀█ █▀▀ █▀█
+                    █▀█ █▄█ █░▀░█ ██▄ ▀▄▀▄▀ █▄█ █▀▄ █░█   █▄█ █▀▄ █▄█ █▀█ █░▀█ █ █▄ ██▄ █▀▄
+    """)
+
+    header(f"\n\nPlease select a number from one of the following options:")
 
     prompt_message = "\nYour Selection: "
-    menu = """
-    1. Add new homework entry.                                 Homework entry example:
-    2. View homework entries.                                  1                        <--  Entry ID
-    3. Edit homework entry.                                    Make a simple program    <--  Homework
-    4. Delete a homework entry.                                Programming              <--  Subject
-    5. Delete all homework entries.                            Jan 1, 2021              <--  Deadline
-    6. Exit.
+    menu = f"""
+    {highlight("1")}: Add new homework entry                                           Homework entry example:
+    {highlight("2")}: View homework entries                                            1                        <--  Entry ID
+    {highlight("3")}: Edit homework entry                                              Make a simple program    <--  Homework
+    {highlight("4")}: Delete a homework entry                                          Programming              <--  Subject
+    {highlight("5")}: Delete all homework entries                                      Jan 1, 2021              <--  Deadline
+    {highlight("6")}: Exit
     """
 
     user_input = input(menu + prompt(prompt_message))
 
     if user_input == "1":
+        header("\n-------------Add new homework entry-------------")
+        escape_info()
         menu_addEntry()
     elif user_input == "2":
-        header("\n----------Here are your homework/s----------")
+        header("\n-------------Here are your homework/s-------------")
         menu_displayEntries(database.get_entries())
         message_return_home()
         home_menu()
     elif user_input == "3":
-        header("\n----------Edit a homework entry----------")
+        header("\n-------------Edit a homework entry-------------")
+        escape_info()
         menu_displayEntries(database.get_entries())
         menu_editEntry()
     elif user_input == "4":
-        header("\n----------Delete a homework entry----------\n")
+        header("\n-------------Delete a homework entry-------------")
+        escape_info()
         menu_displayEntries(database.get_entries())
         menu_deleteEntry()
     elif user_input == "5":
+        header("\n-------------Delete all homework entries-------------")
         menu_deleteAllEntries()
     elif user_input == "6":
         sys.exit()
@@ -133,6 +162,7 @@ def home_menu():
         print(warning("\nInvalid input"))
         message_return_home()
         home_menu()
+
 
 
 #START OF PROGRAM
